@@ -14,5 +14,3 @@ eg
 **To add**
 
 ```/film add [number] [name]```
-
-Test1
