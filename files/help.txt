@@ -1,0 +1,16 @@
+
+__**xanium-bot help**__
+**List of commands**
+```/help```
+```/uptime```
+```/film [name] [true/false]
+eg
+/film ant false```
+```/film list```
+
+```/film update [number] [name] [true/false]```
+
+
+**To add**
+
+```/film add [number] [name]```
