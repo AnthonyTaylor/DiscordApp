@@ -2,6 +2,7 @@
 
 const MongoClient = require("mongodb").MongoClient;
 const MongoUrl = process.env.DB_CONN;
+const DB = process.env.DB;
 
 //message passed from chat.js
 this.chat = function(msg, client){
@@ -39,7 +40,7 @@ this.chat = function(msg, client){
 		//connect to the database and collection
 		MongoClient.connect(MongoUrl, function(err, db) {
 			if (err) throw err;
-			var dbo = db.db("xz-bot");
+			var dbo = db.db(DB);
 			
 			//send the query to the database and convert the response to an array
 			dbo.collection("main").find(mQuery, { _id: 0, ID: 1, name: 1}).toArray(function(err, result) {
@@ -64,7 +65,7 @@ this.chat = function(msg, client){
 		//connect to the database and collection
 		MongoClient.connect(MongoUrl, function(err, db) {
 			if (err) throw err;
-			var dbo = db.db("xz-bot");
+			var dbo = db.db(DB);
 			
 			//send the query to the database and convert the response to an array
 			dbo.collection("main").find().toArray(function(err, result) {
@@ -83,7 +84,7 @@ this.chat = function(msg, client){
 		//connect to the database and collection
 		MongoClient.connect(MongoUrl, function(err, db) {
 			if (err) throw err;
-			var dbo = db.db("xz-bot");
+			var dbo = db.db(DB);
 			
 			dbo.collection("main").update(
 				{"ID" : num},
@@ -98,7 +99,7 @@ this.chat = function(msg, client){
 	function nameTrue(toCheck){
 		MongoClient.connect(MongoUrl, function(err, db) {
 			if (err) throw err;
-			var dbo = db.db("xz-bot");
+			var dbo = db.db(DB);
 			
 			//dbo.collection("main") ...
 
