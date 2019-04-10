@@ -11,6 +11,14 @@ this.chat = function(msg, client){
 	//turn user entered command into an array, stripping "/film " one word per element, seperated by a space
 	var	command = msg.content.substring(6).split(" ");  
 	
+	switch(command[0].toLowerCase()) {
+		case "list":
+
+		break;
+		default:
+
+	}
+
 	if (command[0].toLowerCase().toString() === "list"){
 		findAll();
 		
@@ -53,6 +61,8 @@ this.chat = function(msg, client){
 				}else{
 					//for each object in the array, add the ID and name to the response
 					result.forEach(function(obj) { response += obj.ID + " " + obj.name + "\n";});
+					//response = result.map(x => x.ID + " " + x.name + "\n")
+					//response.reduce(a, b => a + b)
 				}
 				//send the response and close the database connection
 				msg.reply(response);
