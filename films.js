@@ -13,36 +13,27 @@ this.chat = function(msg, client){
 	
 	switch(command[0].toLowerCase()) {
 		case "list":
-
-		break;
+			findAll();
+			break;
+		case "seen":
+			updateDB('seen', command[1].toLowerCase(), command[2].toLowerCase());	
+			break;
+		case "unseen":
+			updateDB('unseen', command[1].toLowerCase(), command[2].toLowerCase());	
+			break;
 		default:
-
-	}
-
-	if (command[0].toLowerCase().toString() === "list"){
-		findAll();
-		
-	}else if (command[0].toLowerCase().toString() === "update"){
-		updateDB(command[1].toLowerCase().toString(), command[2].toLowerCase().toString(), command[3].toLowerCase().toString());
-		
-	}else{
-		//ensures both are strings prior to use
-		var comm1 = command[0].toLowerCase().toString();
-		var comm2 = command[1].toLowerCase().toString();
+			//ensures both are strings prior to use
+			var comm1 = command[0].toLowerCase().toString();
+			var comm2 = command[1].toLowerCase().toString();
 			
-		//prepares Mongo query
-		//note: unless otherwise stated the variable at the start of the object will be treated as plaintext
-		//in order to use the value held within the variable it needs to be enclosed in square brackets
-		var mQuery = { [comm1]: comm2 };
-		
-		findSpecific(mQuery);
-
-/*		if (nameTrue(comm1)) {
+			//prepares Mongo query
+			//note: unless otherwise stated the variable at the start of the object will be treated as plaintext
+			//in order to use the value held within the variable it needs to be enclosed in square brackets
+			var mQuery = { [comm1]: comm2 };
+			
 			findSpecific(mQuery);
-		}else{
-			msg.reply("name not found");
-		}
-*/	}
+			break;
+	}
 	
 	function findSpecific(mQuery){
 		//connect to the database and collection
@@ -90,34 +81,37 @@ this.chat = function(msg, client){
 		});
 	}
 	
-	function updateDB(num, name, val){
+	/*
+	params
+		num: ID of the film
+		name: name of the person to be updarted
+		value: true / false
+	*/
+	function updateDB(val, num, name){
 		//connect to the database and collection
+
+		bWatched = (val = 'seen') ? true : false
+
 		MongoClient.connect(MongoUrl, function(err, db) {
 			if (err) throw err;
 			var dbo = db.db(DB);
 			
 			dbo.collection("main").update(
 				{"ID" : num},
-				{$set: {[name]: val}}
+				{$set: {[name]: bWatched}}
 				);
 				
-			msg.reply(`Film ${num} updated`);
-			db.close();
-		});
+				msg.reply(`Film ${num} updated`);
+				db.close();
+			});
+		}
 	}
 
-	function nameTrue(toCheck){
-		MongoClient.connect(MongoUrl, function(err, db) {
-			if (err) throw err;
-			var dbo = db.db(DB);
-			
-			//dbo.collection("main") ...
+	/*
+	 *   /film seen [id] [name] – changing the syntax so that you can mark someone as seen or unseen.  Can these two commands reuse code?
+	 *   /film unseen [id] [name] – changing the syntax so that you can mark someone as seen or unseen.  Can these two commands reuse code?
+	 *   /film update [id] [title] – update the film title
+	 *   /film add [optional id] [title] (just uses next id if not specified) – Add a new movie, with the ID (integer) parameter being optional
+	 *   /unseen [name … name] – pass in a list of users and get a list of movies they haven’t seen
 
-			//if toCheck exists in document with ID of 1 return true else return falseZ
-		});
-	}
-}
-/*
-	Find out why update Carl needed caps
-	Create a new function to test if command[0] is a name in the first Mongo document and use this in FindSpecific and updateDB
-*/
+  */

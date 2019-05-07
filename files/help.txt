@@ -1,5 +1,5 @@
 
-__**xanium-bot help**__
+__**xzanium-bot help**__
 **List of commands**
 ```/help```
 ```/uptime```
@@ -8,8 +8,10 @@ eg
 /film ant false```
 ```/film list```
 
-```/film update [number] [name] [true/false]```
-
+```/film seen [number] [name] 
+/film unseen [number] [name]
+eg
+/film seen 19 ant ``` 
 
 **To add**
 
