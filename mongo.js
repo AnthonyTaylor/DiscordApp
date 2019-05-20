@@ -252,6 +252,5 @@ var val = "seen"
 //createDB(DBName);
 //createColl(DBName, collName);
 //addDocs(DBName, collName);
-findDocs(DBName, collName, findQuery);
+//findDocs(DBName, collName, findQuery);
 //updateDocs(DBName, Films, num, name, val);
-//findDBs(url);

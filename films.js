@@ -17,13 +17,23 @@ this.chat = function(msg, client){
 		findAll();
 		break;
 		case "seen":
-		updateDB('seen', parseInt(command[1]), command[2].toLowerCase());	
+		if (command[1] && command[2]){
+			//use command.slice(2) and send, with seen, as only args, cutting /film seen, sending the rest as an array
+			updateDB('seen', parseInt(command[1]), command[2].toLowerCase());
+		}else{
+			msg.reply("**Invalid input**");
+		}	
 		break;
 		case "unseen":
-		updateDB('unseen', parseInt(command[1]), command[2].toLowerCase());	
+		if (command[1] && command[2]){
+			updateDB('unseen', parseInt(command[1]), command[2].toLowerCase());
+		}else{
+			msg.reply("**Invalid input**");
+		}	
 		break;
 		default:
 		//ensures both are strings prior to use
+		if (command[1]){
 		var comm1 = command[0].toLowerCase();
 		var comm2 = command[1].toLowerCase();
 		
@@ -33,6 +43,10 @@ this.chat = function(msg, client){
 		var mQuery = { [comm1]: comm2 };
 		console.log(mQuery)
 		findSpecific(mQuery);
+		}else {
+			msg.reply("**Invalid input**");
+		}
+
 		break;
 	}
 	
@@ -57,8 +71,8 @@ this.chat = function(msg, client){
 				}else{
 					//for each object in the array, add the ID and name to the response
 					result.forEach(function(obj) { response += obj.ID + " " + obj.name + "\n";});
-					//response = result.map(x => x.ID + " " + x.name + "\n")
-					//response.reduce(a, b => a + b)
+					//response = result.map(x => x.ID + " " + x.name + "\n");
+					//response.reduce(a, b => a + b);
 				}
 				//send the response and close the database connection
 				msg.reply(response);
@@ -78,6 +92,9 @@ this.chat = function(msg, client){
 				
 				//for each object in the array, add the ID and name to the response
 				result.forEach(function(obj) { response += obj.ID + " " + obj.name + "\n";});
+				//response = result.map(x => x.ID + " " + x.name + "\n");
+				//response.reduce(a, b => a + b);
+				
 				
 				//send the response and close the database connection
 				msg.reply(response);
@@ -93,25 +110,31 @@ this.chat = function(msg, client){
 	name: (string) - name of the person to be updated
 	*/
 	function updateDB(val, num, name){
+		//get val and arrays as arguments
+		//var name = inputArray[inputArray.length -1];
+		//inputArray = inputArray.slice(2);
+
 		//connect to the database and collection
 		MongoClient.connect(MongoUrl, {useNewUrlParser: true }, function(err, db) {
 			if (err) throw err;
 			var dbo = db.db("Marvel");
+			
+			//inputArray.forEach(function)
 			var myquery = { ID: num };
 			var newvalues = { $set: {[name]: val} };
-
+			
 			dbo.collection("Films").updateOne(myquery, newvalues, function(err, res) {
-			  if (err) throw err;
-			  if(res.result.nModified == 1){
-				console.log(`Film ${num} updated`);
-				var mQuery = { [name]: val };
-				findSpecific(mQuery)
-			  }else{
-				console.log('Failed to update');
-			  }  
-			  db.close();
+				if (err) throw err;
+				if(res.result.nModified == 1){
+					msg.reply(`Film ${num} updated`);
+					var mQuery = { [name]: val };
+					findSpecific(mQuery)
+				}else{
+					msg.reply('Failed to update');
+				}  
+				db.close();
 			});
-		  });
+		});
 	}
 }
 
@@ -122,4 +145,11 @@ this.chat = function(msg, client){
 *   /film add [optional id] [title] (just uses next id if not specified) – Add a new movie, with the ID (integer) parameter being optional
 *   /unseen [name … name] – pass in a list of users and get a list of movies they haven’t seen
 
+*	use .map, .reduce, and switch(){}
+*/
+
+
+/*
+ * 	use command.splice() to get all elements in the command after /film seen / unseen to update multiple documents at once. 
+ *
 */
