@@ -3,7 +3,7 @@ __**xzanium-bot help**__
 **List of commands**
 ```/help```
 ```/uptime```
-```/film [name] [true/false]
+```/film [name] [seen/unseen]
 eg
 /film ant false```
 ```/film list```

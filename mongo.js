@@ -1,6 +1,7 @@
 //setup
+var mongoPort = 27017;
 var MongoClient = require('mongodb').MongoClient;
-var url = "mongodb://localhost:27017/";
+var url = `mongodb://localhost:/${mongoPort}`;
 
 function createDB(DBname){
 	var urlWithDB = url + DBName;
@@ -31,7 +32,9 @@ function addDocs(DBName, collName){
 				name: "Iron Man",
 				owned: "true",
 				ant: "seen",
-				carl: "seen"
+				carl: "seen",
+				dad: "seen",
+				katie: "seen"
 			},
 			{
 				ID: 2,
@@ -223,20 +226,6 @@ function updateDocs(DBName, collName, num, name, val){
 				console.log('Failed to update');
 			}
 			
-			db.close();
-		});
-	});
-}
-function findDBs(url){
-	var MongoClient = require('mongodb').MongoClient;
-	
-	// Connect using MongoClient
-	MongoClient.connect(url, { useNewUrlParser: true }, function(err, db) {
-		// Use the admin database for the operation
-		var adminDb = db.admin();
-		// List all the available databases
-		adminDb.listDatabases(function(err, result) {
-			console.log(result.databases);
 			db.close();
 		});
 	});

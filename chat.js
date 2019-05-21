@@ -2,6 +2,7 @@ var filmsApp = require("./films.js");
 var fs = require("fs");
 
 //grabs the message and client to decide if it needs to respond
+//convert to switch case
 this.chat = function (msg, client) {
 	if (msg.content.startsWith("/uptime")) {
 		msg.reply(commUptime(client.uptime));
