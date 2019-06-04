@@ -9,6 +9,11 @@ services:
     - "27017:27017"
     volumes:
     - xzbotmongo:/data/db
+  #DiscordBot:
+    #container_name: DiscordBot
+    #image: node
+    #restart: always
+    #depends_on: xz_bot_db
 
 volumes:
   xzbotmongo:

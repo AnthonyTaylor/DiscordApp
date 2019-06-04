@@ -221,7 +221,6 @@ function updateDocs(DBName, collName, num, name, val){
 			if(res.result.nModified == 1){
 				console.log(`Film ${num} updated`);
 				var mQuery = { [name]: val };
-				findSpecific(mQuery)
 			}else{
 				console.log('Failed to update');
 			}
@@ -230,16 +229,50 @@ function updateDocs(DBName, collName, num, name, val){
 		});
 	});
 }
+function remFieldinDoc(DBName, collName, num){
+	MongoClient.connect(url, { useNewUrlParser: true }, function(err, db) {
+		if (err) throw err;
+		var dbo = db.db(DBName);
+		var myquery = { 24:  'Doctor Strange 2: Even Stranger'};
+		var newvalues = {$unset: {daf:1}}
+		
+		dbo.collection(collName).updateOne(myquery, newvalues, function(err, res) {
+			if (err) throw err;
+			if(res.result.nModified == 1){
+				console.log(`Film ${num} updated`);
+			}else{
+				console.log('Failed to update');
+			}
+			
+			db.close();
+		});
+	});
+}
+function remDoc(DBName, collName, delQuery){
+	MongoClient.connect(url, { useNewUrlParser: true }, function(err, db) {
+		if (err) throw err;
+		var dbo = db.db(DBName);
+		dbo.collection(collName).deleteMany(delQuery,  function(err, res) {
+			if (err) throw err;
+			db.close();
+		});
+	});
+}
+
 
 var DBName = "Marvel";
-var  collName = "Films";
-var findQuery = {ID: 1}
-var num = 13;
+var collName = "Films";
+//var findQuery = {ID: 3};
+var findQuery = {};
+var num = 'undefined';
 var name = "benedict"
 var val = "seen"
+var delQuery = {ID: '24'};
 
 //createDB(DBName);
 //createColl(DBName, collName);
 //addDocs(DBName, collName);
 //findDocs(DBName, collName, findQuery);
 //updateDocs(DBName, Films, num, name, val);
+//remFieldinDoc(DBName, collName, num)
+remDoc(DBName, collName, delQuery)

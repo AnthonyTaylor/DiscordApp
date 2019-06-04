@@ -5,7 +5,8 @@ __**xzanium-bot help**__
 ```/uptime```
 ```/film [name] [seen/unseen]
 eg
-/film ant false```
+/film ant unseen```
+
 ```/film list```
 
 ```/film seen [number] [name] 
@@ -13,6 +14,16 @@ eg
 eg
 /film seen 19 ant ``` 
 
-**To add**
 
-```/film add [number] [name]```
+```/film add [number] [title]
+eg
+/film add 200 Avengers 76: Brought out of retirement```
+
+
+```/film update [number] [title]
+eg
+/film update 200 Avengers 77: Brough of of retirement```
+
+```/film delete [number]
+eg
+/film delete 76```
