@@ -14,7 +14,7 @@ this.chat = function(msg){
 	
 	let response = (value) => {msg.reply(`\n ${value}`)}
 	
-	MongoClient.connect(MongoUrl, {useNewUrlParser: true }, function(err, db) {
+	MongoClient.connect(MongoUrl, {useNewUrlParser: true }, async function(err, db) {
 		if (err) throw err;
 		
 		switch(command[0].toLowerCase()) {
@@ -34,7 +34,8 @@ this.chat = function(msg){
 			break;
 			case "unseen":
 			if (command[1] && command[2]){
-				updateDB('unseen', parseInt(command[1]), command[2].toLowerCase(), response, db);
+				let result = await updateDB('unseen', parseInt(command[1]), command[2].toLowerCase(), response, db);
+				msg.reply(result)
 			}else{
 				msg.reply("**\n Invalid input**");
 			}	
@@ -125,7 +126,7 @@ num: (number) - ID of the film
 name: (string) - name of the person to be updated
 msg: (object) - the full message that initiated the request, used to reply
 */
-function updateDB(val, num, name, callback, db){
+async function updateDB(val, num, name, callback, db){
 	//get val and arrays as arguments
 	//var name = inputArray[inputArray.length -1];
 	//inputArray = inputArray.slice(2);
@@ -138,17 +139,20 @@ function updateDB(val, num, name, callback, db){
 	var newvalues = { $set: {[name]: val} };
 	let response = ""
 	
-	dbo.collection(coll).updateOne(myquery, newvalues, function(err, res) {
-		if (err) throw err;
+	try {
+		let res = await dbo.collection(coll).updateOne(myquery, newvalues);
+
 		if(res.result.nModified == 1){
 			response = `Film ${num} updated`;
 		}else{
 			response = 'Failed to update';
 		}  
 		
-		if (callback) callback(response);
 		db.close();
-	});
+		return response;
+	} catch (err){
+		console.log(err);
+	}
 }
 
 /*
