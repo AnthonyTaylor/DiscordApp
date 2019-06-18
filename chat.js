@@ -7,7 +7,7 @@ this.chat = function (msg, client) {
 	if (msg.content.startsWith("/uptime")) {
 		msg.reply(commUptime(client.uptime));
 		allCommand(msg.content);
-	}else if (msg.content.startsWith("/film ")) {
+	}else if (msg.content.startsWith("/film ") || msg.content.startsWith("/unseen ")) {
 		filmsApp.chat(msg);
 		allCommand(msg.content);
 	}else if (msg.content.startsWith("/help")) {
