@@ -7,8 +7,10 @@ const coll = process.env.coll;
 
 //message passed from chat.js
 this.chat = function(msg){
-	//turn user entered command into an array, stripping "/film " one word per element, seperated by a space
-	var	command = msg.content.substring(6).split(" ");  
+	//Populated by if messasge staerrtsWith
+	//turns user entered command into an array, stripping "/film " or "/unseen " one word per element, seperated by a space
+	var	command = "";  
+	let commInner = "";
 	//preps empty array to send as search query
 	var mQuery = {};
 	
@@ -17,31 +19,30 @@ this.chat = function(msg){
 	MongoClient.connect(MongoUrl, {useNewUrlParser: true }, function(err, db) {
 		if (err) throw err;
 		
-		if (msg.content.startsWith("/unseen ")) {		
-			command.shift();
+		//finds all films that all parties have not seen
+		if (msg.content.startsWith("/unseen ")) {	
+			command = msg.content.substring(7).split(" ");
+			commInner = command.slice(2,-1);
 			command.forEach(element => {
 				mQuery[element] =  {$ne: "seen" };
 			});
 			find(mQuery, response, db);
 		} else{	
+			command = msg.content.substring(6).split(" ");
 			switch(command[0].toLowerCase()) {
 				case "list":
 				find(mQuery, response, db);
-				
 				break;
 				case "seen":
 				if (command[1] && command[2]){
-					//use command.slice(2) and send, with seen, as only args, cutting /film seen, sending the rest as an array
-					//send array of films as /film seen 1,2,3,4,5,6,7,8 dad
-					//use command[1].split(",") to separate them
-					updateDB('seen', parseInt(command[1]), command[2].toLowerCase(), response, db);
+					updateDB('seen', command.slice(1,-1), command[command.length -1].toLowerCase(), response, db);
 				}else{
 					msg.reply("\n **Invalid input**");
 				}	
 				break;
 				case "unseen":
 				if (command[1] && command[2]){
-					updateDB('unseen', parseInt(command[1]), command[2].toLowerCase(), response, db);
+					updateDB('unseen', command.slice(1,-1), command[command.length -1].toLowerCase(), response, db);
 				}else{
 					msg.reply("**\n Invalid input**");
 				}	
@@ -104,12 +105,10 @@ accepts empty object to search for all
 */
 function find(mQuery, callback, db){
 	//connect to the database and collection
-	console.log(mQuery);
 	var response = "";
 	var dbo = db.db(DB);
 	//send the query to the database and convert the response to an array
 	dbo.collection(coll).find(mQuery).toArray(function(err, result) {
-		console.log(result);
 		if (err) throw err;
 		//Check if the result of the MongoDB query is empty
 		if(result === undefined || result.length == 0){
@@ -127,34 +126,35 @@ function find(mQuery, callback, db){
 /*
 params
 val: (string) - seen / unseen
-num: (number) - ID of the film
+num: (number) - ID of the film - in a list
 name: (string) - name of the person to be updated
-msg: (object) - the full message that initiated the request, used to reply
 */
 function updateDB(val, num, name, callback, db){
-	//get val and arrays as arguments
-	//var name = inputArray[inputArray.length -1];
-	//inputArray = inputArray.slice(2);
-	
+
 	//connect to the database and collection
 	var dbo = db.db(DB);
-	
-	//inputArray.forEach(function)
-	var myquery = { ID: num };
-	var newvalues = { $set: {[name]: val} };
+	let myquery;
+	let newvalues;
 	let response = "";
+	//console.log(response);
 	
-	dbo.collection(coll).updateOne(myquery, newvalues, function(err, res) {
-		if (err) throw err;
-		if(res.result.nModified == 1){
-			response = `Film ${num} updated`;
-		}else{
-			response = 'Failed to update';
-		}  
-		
-		if (callback) callback(response);
-		db.close();
-	});
+	for (let index = 0; index < num.length; index++) {
+		num[index] = parseInt(num[index]);
+		myquery = { ID: num[index] };
+		newvalues = { $set: {[name]: val} };
+
+		dbo.collection(coll).updateOne(myquery, newvalues, function(err, res) {
+			if (err) throw err;
+						
+			if(res.result.nModified == 1){
+				response = `Film ${num[index]} updated`;
+			}else{
+				response = `Failed to update ${num[index]}`;
+			}  
+			if (callback) callback(response);	
+			db.close();
+		});
+	}
 }
 
 /*

@@ -262,8 +262,8 @@ function remDoc(DBName, collName, delQuery){
 
 var DBName = "Marvel";
 var collName = "Films";
-//var findQuery = {ID: 3};
-var findQuery = {};
+var findQuery = {ID: 2};
+//var findQuery = {};
 var num = 'undefined';
 var name = "benedict"
 var val = "seen"
@@ -272,7 +272,7 @@ var delQuery = {ID: '24'};
 //createDB(DBName);
 //createColl(DBName, collName);
 //addDocs(DBName, collName);
-//findDocs(DBName, collName, findQuery);
+findDocs(DBName, collName, findQuery);
 //updateDocs(DBName, Films, num, name, val);
 //remFieldinDoc(DBName, collName, num)
-remDoc(DBName, collName, delQuery)
+//remDoc(DBName, collName, delQuery)

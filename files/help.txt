@@ -19,7 +19,8 @@ eg
 /film seen [number] [name] 
 /film unseen [number] [name]
 eg
-/film seen 19 ant ``` 
+/film seen 19 ant 
+/film unseen 1 2 3 4 dad``` 
 
 
 **Add a new film**
