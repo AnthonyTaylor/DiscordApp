@@ -1,0 +1,19 @@
+version: "3.7"
+
+services:
+  database:
+    container_name: xz_bot_db
+    image: mongo
+    #command: jekyll serve --watch --incremental
+    ports:
+    - "27017:27017"
+    volumes:
+    - xzbotmongo:/data/db
+  #DiscordBot:
+    #container_name: DiscordBot
+    #image: node
+    #restart: always
+    #depends_on: xz_bot_db
+
+volumes:
+  xzbotmongo:

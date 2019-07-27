@@ -1,16 +1,49 @@
 
-__**xanium-bot help**__
+__**xzanium-bot help**__
 **List of commands**
 ```/help```
 ```/uptime```
-```/film [name] [true/false]
+
+**Get the list of films that person has seen or not seen**
+```
+/film [name] [seen/unseen]
 eg
-/film ant false```
-```/film list```
+/film ant unseen```
 
-```/film update [number] [name] [true/false]```
+**List all films**
+```
+/film list```
+
+**Update list to say a film has been seen or not**
+```
+/film seen [number] [name] 
+/film unseen [number] [name]
+eg
+/film seen 19 ant 
+/film unseen 1 2 3 4 dad``` 
 
 
-**To add**
+**Add a new film**
+```
+/film add [number] [title]
+eg
+/film add 200 Avengers 76: Brought out of retirement```
 
-```/film add [number] [name]```
+
+**Update a film title**
+```
+/film update [number] [title]
+eg
+/film update 200 Avengers 77: Brough of of retirement```
+
+**Delete a film**
+```
+/film delete [number]
+eg
+/film delete 76```
+
+**Get list of films a list of people have not seen**
+```
+/unseen [list of names]
+eg
+/unseen ant carl```
